@@ -1,3 +1,70 @@
+###############################################################################
+# Multivariate Probit Regression with Structured Dependence
+# Robustness Study (Post-processing + Figures + LaTeX Table)
+#
+# Purpose
+# -------
+# This script post-processes the posterior summaries produced in the robustness
+# simulation study, where data are generated under a given correlation structure
+# (here: Toeplitz) and then fitted with competing models (e.g., AR1, Lcorr,
+# Independence).
+#
+# For each scenario and replication, it:
+#   1) Reads saved Stan summary tables (.rds) for each fitted model.
+#   2) Reconstructs the fitted correlation matrix (C) when applicable.
+#   3) Computes a Stein-type loss between the fitted correlation matrix and
+#      the true correlation matrix used to generate the data.
+#   4) Extracts diagnostics (ESS, Rhat) from lp__ and from each beta parameter.
+#   5) Computes beta accuracy metrics (Bias, ABias, RMSE) replication-by-replication.
+#   6) Saves consolidated data frames for (i) global metrics and (ii) betas.
+#   7) Produces and saves boxplots (ESS, Rhat, Stein) and beta-specific boxplots
+#      (ESS, Rhat, Bias, RMSE, SD).
+#   8) Builds a LaTeX table (xtable) summarizing mean Estimate/ABias/RMSE by
+#      parameter and fitted model.
+#
+# Inputs
+# ------
+# - Posterior summary files from fitted models, stored as:
+#     SimulationStudies/ResultsSimRobus/summaryMult_<Model>_R<r>_S<j>.rds
+#   where Model ∈ {Lcorr, AR1, Ind}, r ∈ {1..R}, j ∈ {1..nrow(Scenario)}.
+#
+# - Auxiliary functions from:
+#     Programs/Aux_Functions.R
+#   Expected helpers include:
+#     - toeplitz.matrix(...)
+#     - ARH1.matrix(...)
+#     - reconstruir_correlacao(...)   (reconstruct correlation matrix from Lcorr fit)
+#
+# Outputs
+# -------
+# - Two consolidated objects saved as .rds:
+#     ResultadosSimRobus/metrics_Toeplitz.rds   (df_metrics)
+#     ResultadosSimRobus/betas_Toeplitz.rds     (df_betas)
+#
+# - Figures saved as EPS into Figuras/:
+#     Boxplot_ESS_Toeplitz.eps
+#     Boxplot_Rhat_Toeplitz.eps
+#     Boxplot_Stein_Toeplitz.eps
+#     Boxplot_ESS_beta_Toeplitz.eps
+#     Boxplot_Rhat_beta_Toeplitz.eps
+#     Boxplot_Bias_Toeplitz.eps
+#     Boxplot_RMSE_Toeplitz.eps
+#     Boxplot_SD_Toeplitz.eps
+#
+# - A LaTeX table printed to console (xtable) summarizing beta recovery.
+#
+# Notes / Assumptions
+# -------------------
+# - Default settings use 1 chain. With a single chain, Rhat may be NA or not
+#   meaningful. If you rely on Rhat, consider running >= 2 chains.
+#
+# - The "Stein" criterion used here is:
+#       Stein(C_hat, C_true) = tr(C_hat * C_true^{-1}) - log det(C_hat * C_true^{-1}) - vT
+#   This is a common loss for covariance/correlation matrix comparison.
+#
+###############################################################################
+
+# Packages -----------------------------------------------------------------
 library(rstan)
 library(rstansim)
 library(ggplot2)
@@ -6,25 +73,23 @@ library(tidyr)
 
 options(mc.cores = parallel::detectCores())
 
-PC <- 'Usuário'
-setwd(paste0('C:/Users/', PC,
-             '/OneDrive/Documentos/Artigos/Multivariate Probit regression using antedependence/'))
+setwd('~/GitHub/Multivariate-Probit-regression-antedependence/')
 
 library(here)
-source(here("Programas", "Aux_Functions.R"))
+source(here("Programs", "Aux_Functions.R"))
 
 # ------------------------------------------------------------
-# Controle: quais modelos serão processados?
+# Control: which models will be processed?
 # ------------------------------------------------------------
 #process_models <- c("AR1", "Ind")
 # process_models <- c("Lcorr","Ind")
 # process_models <- c("AR1")
- process_models <- c("Lcorr","AR1")
+ process_models <- c("AR1",'Lcorr')
 
 corr_type <- "Toeplitz"
-pathResults <- here("ResultadosSimRobus")
+pathResults   <- here("SimulationStudies", "ResultsSimRobus")
 
-# Verdadeiros betas
+# True betas
 beta_verd <- c(1, .5, .8, .6)
 param_names <- paste0("beta[", 1:4, "]")
 
@@ -39,7 +104,7 @@ res_list <- list()
 beta_list <- list()
 
 # ------------------------------------------------------------
-# LOOP PRINCIPAL
+#  Main LOOP 
 # ------------------------------------------------------------
 
 for (j in 1:nrow(Scenario)) {
@@ -57,7 +122,7 @@ for (j in 1:nrow(Scenario)) {
   
   for (r in 1:R) {
     
-    # caminhos
+    # paths
     file_Lcorr <- file.path(pathResults, paste0("summaryMult_Lcorr_R", r, "_S", j, ".rds"))
     file_AR1   <- file.path(pathResults, paste0("summaryMult_AR1_R", r, "_S", j, ".rds"))
     file_Ind   <- file.path(pathResults, paste0("summaryMult_Ind_R", r, "_S", j, ".rds"))
@@ -143,7 +208,7 @@ for (j in 1:nrow(Scenario)) {
       
       sum_Ind <- readRDS(file_Ind)
       
-      # C independente = matriz identidade
+      # C independente = Identity matrix
       C_Ind <- diag(vT)
       
       stein_I <- sum(diag(C_Ind %*% solve(C_verd))) -
@@ -159,8 +224,8 @@ for (j in 1:nrow(Scenario)) {
       for (i in 1:4) {
         est <- sum_Ind[param_names[i], "mean"]
         sdv <- sum_Ind[param_names[i], "sd"]
-        ess <- sum_Lcorr[param_names[i], 'n_eff']
-        Rhat <- sum_Lcorr[param_names[i], 'Rhat']
+        ess <- sum_Ind[param_names[i], 'n_eff']
+        Rhat <- sum_Ind[param_names[i], 'Rhat']
         
         beta_list[[length(beta_list)+1]] <- data.frame(
           Rep = r, Scenario = nome_cenario, Model = "Ind",
@@ -179,7 +244,7 @@ for (j in 1:nrow(Scenario)) {
 }
 
 # ------------------------------------------------------------
-# Consolidação
+# Consolidation
 # ------------------------------------------------------------
 
 df_metrics <- do.call(rbind, res_list)
@@ -189,7 +254,7 @@ saveRDS(df_metrics, here("ResultadosSimRobus", paste0("metrics_", corr_type, ".r
 saveRDS(df_betas, here("ResultadosSimRobus", paste0("betas_", corr_type, ".rds")))
 
 # ------------------------------------------------------------
-# Gráficos
+# Plots
 # ------------------------------------------------------------
 
 df_long <- pivot_longer(df_metrics, cols = c("ESS", "Rhat", "Stein"),
@@ -239,7 +304,7 @@ ggsave(here("Figuras", paste0("Boxplot_Stein", "_", corr_type, ".eps")),
 
 
 # ------------------------------------------------------------
-# Boxplots dos Betas
+# Boxplots of Betas
 # ------------------------------------------------------------
 
 
@@ -294,15 +359,15 @@ ggsave(here("Figuras", paste0("Boxplot_SD", "_", corr_type, ".eps")),
 
 
 
-library(knitr)     # para kable()
+library(knitr)     # for kable()
 library(xtable)
-# Carregar resultados dos betas
+# Loading beta's result
 df_betas <- readRDS(here("ResultadosSimRobus", "betas_Toeplitz.rds"))
 
-# Verdadeiros valores (para garantir consistência)
+# Actual values (to ensure consistency)
 beta_verd <- c("beta[1]" = 1.0, "beta[2]" = 0.5, "beta[3]" = 0.8, "beta[4]" = 0.6)
 
-# Tabela no formato desejado
+# Summary Table
 tabela_latex <- df_betas %>%
   group_by(Parameter, Model) %>%
   summarise(
@@ -313,7 +378,7 @@ tabela_latex <- df_betas %>%
     .groups = "drop"
   ) %>%
   arrange(Parameter, Model)
-# Exibir com xtable para LaTeX
+# Present with xtable for LaTeX
 xt <- xtable(tabela_latex, digits = c(0, 0, 0, 1, 3, 3, 3),
              caption = "Summary of average estimates, absolute bias (ABias), and RMSE by parameter and model.",
              label = "tab:summary_betas")
