@@ -173,3 +173,24 @@ model{
   }
 }
 
+generated quantities{
+  // Recover the full correlation matrix C from its Cholesky factor
+  corr_matrix[vT] C;
+  vector[N] log_lik;
+  C = multiply_lower_tri_self_transpose(Lcorr);
+  
+  for (n in 1:N) {
+    vector[vT] eta;
+    real ll = 0;
+    
+    // Linear predictor across time for subject n
+    eta = X[n, , ] * beta;
+
+    // Multivariate normal contribution with correlated errors
+    ll += multi_normal_cholesky_lpdf(Z[n,] | eta, Lcorr);
+   
+   log_lik[n]=ll;
+    
+  }
+  
+}

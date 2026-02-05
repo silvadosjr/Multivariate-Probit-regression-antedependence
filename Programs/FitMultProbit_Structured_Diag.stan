@@ -333,3 +333,34 @@ model{
   }
 }
 
+generated quantities {
+  vector[N] log_lik;
+
+  for (j in 1:N) {
+    vector[vT] eta;
+    real ll = 0;
+
+    // t = 1
+    eta[1] = dot_product(X[j, 1, ], beta);
+
+    // contribuição da normal (condicional) + ajuste de truncagem (Z|Y)
+    ll += normal_lpdf(Z[j, 1] | eta[1], sqrt(D_var[1, 1]));
+
+    // t = 2..vT
+    for (t in 2:vT) {
+      eta[t] = dot_product(X[j, t, ], beta);
+
+      // ajuste de dependência via Phi_mat (mesmo do bloco model)
+      for (k in 1:(t - 1)) {
+        eta[t] += Phi_mat[t, k] * (Z[j, k] - dot_product(X[j, k, ], beta));
+      }
+      
+      ll += normal_lpdf(Z[j, t] | eta[t], sqrt(D_var[t, t]));
+
+    }
+
+    log_lik[j] = ll;
+  }
+}
+
+

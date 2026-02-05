@@ -311,3 +311,46 @@ reconstruir_correlacao <- function(summary_df, value_col = "mean") {
   return(R_hat)
 }
 
+
+# ===========================================================================
+# Train / Test split for multivariate longitudinal probit data
+# (subject-level split, preserves within-subject dependence)
+# ===========================================================================
+
+make_train_test_split <- function(Y, X, test_frac = 0.2, seed = 1234) {
+  
+  set.seed(seed)
+  
+  # Number of subjects
+  N <- dim(Y)[1]
+  
+  # Indices of subjects
+  id_all <- seq_len(N)
+  
+  # Sample test subjects
+  n_test <- ceiling(test_frac * N)
+  id_test <- sample(id_all, size = n_test, replace = FALSE)
+  id_train <- setdiff(id_all, id_test)
+  
+  # Split response
+  Y_train <- Y[id_train, , drop = FALSE]
+  Y_test  <- Y[id_test,  , drop = FALSE]
+  
+  # Split design array (N x vT x p)
+  X_train <- X[id_train, , , drop = FALSE]
+  X_test  <- X[id_test,  , , drop = FALSE]
+  
+  list(
+    id_train = id_train,
+    id_test  = id_test,
+    Y_train  = Y_train,
+    Y_test   = Y_test,
+    X_train  = X_train,
+    X_test   = X_test
+  )
+}
+
+
+
+
+
