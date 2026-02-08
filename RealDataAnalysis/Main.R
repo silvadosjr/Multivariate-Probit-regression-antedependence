@@ -178,7 +178,7 @@ fit1 <- rstan::extract(samp1,permuted=T,inc_warmup=F)
 
 beta_amos<-fit1$beta
 
-rho_amos<-fit1$rho_vec
+rho_amos<-fit1$rho_ar1
 
 #C_amos<-fit1$C
 
@@ -187,9 +187,9 @@ rho_amos<-fit1$rho_vec
 
 beta_est<-apply(beta_amos,2,mean)
 
-rho_est<-apply(rho_amos,2,mean)
+#rho_est<-apply(rho_amos,2,mean)
 
-#rho_est<-mean(rho_amos)
+rho_est<-mean(rho_amos)
 
 C_est<-AD_matrix(vT,rho_est)
 

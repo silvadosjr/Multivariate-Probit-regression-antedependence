@@ -3,12 +3,13 @@ library(rstan)
 library(dplyr)
 library(tidyr)
 library(loo)
-library(here)
+
 
 options(mc.cores = parallel::detectCores())
 rstan_options(auto_write = TRUE)
 
 setwd('~/GitHub/Multivariate-Probit-regression-antedependence/')
+library(here)
 source(here("Programs", "Aux_Functions.R"))
 
 # Directory to store fitted models
@@ -82,32 +83,6 @@ base_data <- list(
 # Helper functions
 # ===========================================================================
 
-# Initial values by model
-make_inits <- function(model_name, p, vT) {
-  if (model_name %in% c("Toeplitz", "AD")) {
-    return(function() list(beta = rep(0.1, p), rho_vec = rep(0.1, vT - 1)))
-  }
-  if (model_name == "AR1") {
-    return(function() list(beta = rep(0.1, p), rho_ar1 = 0.1))
-  }
-  if (model_name == "ARMA11") {
-    return(function() list(beta = rep(0.1, p), phi = 0.1, theta = 0.1))
-  }
-  if (model_name %in% c("Unstructured", "Independent")) {
-    return(function() list(beta = rep(0.1, p)))
-  }
-  stop("Unknown model in make_inits().")
-}
-
-# Parameters to monitor
-make_pars <- function(model_name) {
-  if (model_name %in% c("Toeplitz", "AD")) return(c("beta","rho_vec","log_lik"))
-  if (model_name == "AR1")                  return(c("beta","rho_ar1","log_lik"))
-  if (model_name == "ARMA11")               return(c("beta","phi","theta","log_lik"))
-  if (model_name == "Unstructured")         return(c("beta","Lcorr","log_lik"))
-  if (model_name == "Independent")          return(c("beta","log_lik"))
-  stop("Unknown model in make_pars().")
-}
 
 # Data list by model
 make_data_list <- function(model_name) {
