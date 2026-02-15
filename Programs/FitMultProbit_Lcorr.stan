@@ -173,3 +173,9 @@ model{
   }
 }
 
+generated quantities{
+  // Recover the full correlation matrix C from its Cholesky factor
+  corr_matrix[vT] C;
+  C = multiply_lower_tri_self_transpose(Lcorr);
+}
+

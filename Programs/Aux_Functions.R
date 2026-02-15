@@ -376,7 +376,7 @@ make_pars <- function(model_name, log_lik = TRUE) {
                  "AD"           = c("beta", "rho_vec"),
                  "AR1"          = c("beta", "rho_ar1"),
                  "ARMA11"       = c("beta", "phi", "theta"),
-                 "Unstructured" = c("beta", "Lcorr"),
+                 "Unstructured" = c("beta", "C"),
                  "Independent"  = c("beta"),
                  stop("Unknown model in make_pars().")
   )

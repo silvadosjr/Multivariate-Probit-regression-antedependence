@@ -249,7 +249,7 @@ transformed parameters {
   // The diagonal D_var = diag(d^2) provides the conditional variances.
   //===========================================================
   L = cholesky_decompose(R);
-
+ 
   vector[vT] d = diagonal(L);
   L_std = L * inverse(diag_matrix(d));   // unit diagonal
   D_var = diag_matrix(d .* d);           // conditional variances

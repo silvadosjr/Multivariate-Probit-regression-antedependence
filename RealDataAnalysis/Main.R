@@ -127,10 +127,12 @@ Y<-sim_Toep$Y
 data_list=list(vT=vT,p=p,N=n,Y=Y,X=X_array,sigma_beta=10,sigma_rho=1,cor_type=3) 
 
 
-params <- c('beta','rho_vec')
+model_name<-'AD'
+
+params <- make_pars(model_name,log_lik = F)
 nChains = 1
 burnInSteps = 1000
-thinSteps = 10
+thinSteps = 5
 numSavedSteps = 1000  #across all chains
 nIter = ceiling(burnInSteps + (numSavedSteps * thinSteps)/nChains)
 nIter
@@ -138,13 +140,13 @@ nIter
 #nIter=11000
 
 
-ini<-function() {list(beta=rep(.1,p),rho_vec=rep(.1,vT-1))}
+ini<-make_inits(model_name, p = p, vT = vT)
 
 begin<-Sys.time()
 print(begin)
 
 
-samp1 <- stan(data = data_list, file = "FitMultProbit_Structured.stan",init = ini,
+samp1 <- stan(data = data_list, file =file.path('Programs', "FitMultProbit_Structured.stan"),init = ini,
               chains = nChains, pars = params, iter = nIter,
               warmup = burnInSteps, thin = thinSteps,control = list(adapt_delta = 0.9,max_treedepth=15),
               save_dso = T)
@@ -178,22 +180,22 @@ fit1 <- rstan::extract(samp1,permuted=T,inc_warmup=F)
 
 beta_amos<-fit1$beta
 
-rho_amos<-fit1$rho_ar1
+rho_amos<-fit1$rho_vec
 
-#C_amos<-fit1$C
+C_amos<-fit1$C
 
-#(C_est=apply(C_amos, c(2,3), mean))
+(C_est=apply(C_amos, c(2,3), mean))
 
 
 beta_est<-apply(beta_amos,2,mean)
 
-#rho_est<-apply(rho_amos,2,mean)
+rho_est<-apply(rho_amos,2,mean)
 
-rho_est<-mean(rho_amos)
+#rho_est<-mean(rho_amos)
 
 C_est<-AD_matrix(vT,rho_est)
 
-#C_est<-toeplitz.matrix(rep(1,vT),rho_est)
+C_est<-AD_matrix(vT,rho_est)
 
 #C_verd<-ARH1.matrix(rep(1,vT),rho_verd)
 
