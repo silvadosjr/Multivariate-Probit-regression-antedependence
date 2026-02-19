@@ -30,7 +30,7 @@ madras_wide <- madras %>%
   )
 
 # Remove subjects with any missing repeated measurements
-madras_wide <- na.omit(madras_wide)
+#madras_wide <- na.omit(madras_wide)
 
 
 ## Design matrix for: y ~ month + age + gender + monthXage + monthXgender
@@ -89,13 +89,20 @@ madras_wide <- madras_wide %>%
 
 # Binary response matrix (N x vT)
 # Removes id, age, and gender columns
-Y <- madras_wide[,-c(1,2,3)]
+Y <- as.matrix(madras_wide[,-c(1,2,3)])
 
 
+t_index <- t(apply(Y, 1, function(x) {
+  idx <- which(!is.na(x))
+  c(idx, rep(0L, ncol(Y) - length(idx)))
+}))
+
+n_obs <- rowSums(t_index > 0)
 
 
+Y[is.na(Y)]<- -1L
 
-
+storage.mode(Y) <- "integer"
 
 
 

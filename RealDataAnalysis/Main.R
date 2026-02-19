@@ -124,7 +124,7 @@ Y<-sim_Toep$Y
 # 3 = AD(1)
 # 4 = ARMA(1,1)
 
-data_list=list(vT=vT,p=p,N=n,Y=Y,X=X_array,sigma_beta=10,sigma_rho=1,cor_type=3) 
+data_list=list(vT=vT,p=p,N=n,Y=Y,X=X_array,sigma_beta=10,sigma_rho=1,cor_type=3,n_obs=n_obs,t_index=t_index) 
 
 
 model_name<-'AD'
@@ -146,10 +146,10 @@ begin<-Sys.time()
 print(begin)
 
 
-samp1 <- stan(data = data_list, file =file.path('Programs', "FitMultProbit_Structured.stan"),init = ini,
+samp1 <- stan(data = data_list, file =file.path('Programs', "FitMultProbit_Structured_Missing.stan"),init = ini,
               chains = nChains, pars = params, iter = nIter,
               warmup = burnInSteps, thin = thinSteps,control = list(adapt_delta = 0.9,max_treedepth=15),
-              save_dso = T)
+              save_dso = T,refresh=600)
 
 
 end<-Sys.time()
