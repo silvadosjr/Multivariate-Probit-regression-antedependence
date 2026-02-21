@@ -319,6 +319,7 @@ model{
 // 
 //   target += normal_lpdf(eps | rep_vector(0.0, Tj), sdr);
 // }
+// }
 
 {
     // Precompute conditional SDs once (same for all subjects)
@@ -344,7 +345,37 @@ model{
       target += normal_lpdf(eps | rep_vector(0.0, Tj), sd_all[1:Tj]);
     }
   }
-
-
 }
+
+
+generated quantities {
+  vector[N] log_lik;
+
+  // Precompute marginal/conditional SDs once (same for all subjects)
+  vector[vT] sd_all;
+  for (t in 1:vT)
+    sd_all[t] = sqrt(D_var[t, t]);
+
+  for (j in 1:N) {
+
+    int Tj = n_obs[j];
+
+    // Default value (so every element is always assigned)
+    log_lik[j] = 0;
+
+    if (Tj == 0) continue;
+
+    // Mean and residuals
+    vector[vT] mu = X[j] * beta;
+    vector[vT] r  = to_vector(Z[j]) - mu;
+
+    // Innovations for the observed prefix under monotone dropout
+    vector[Tj] eps = T_mat[1:Tj, 1:Tj] * r[1:Tj];
+
+    // Add log-likelihood contribution
+    log_lik[j] += normal_lpdf(eps | rep_vector(0.0, Tj), sd_all[1:Tj]);
+  }
+}
+  
+
 

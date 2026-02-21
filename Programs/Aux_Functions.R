@@ -573,9 +573,11 @@ hpc_q3_adjusted <- function(
       
     } else if (model_name == "Unstructured") {
       
-      if (is.null(post$Lcorr)) stop("Posterior draw 'Lcorr' not found.")
-      L <- post$Lcorr[it, , ]
-      R <- L %*% t(L)
+      if (is.null(post$C)) stop("Posterior draw 'C' not found.")
+     # L <- post$Lcorr[it, , ]
+    #  R <- L %*% t(L)
+      
+      R<- post$C[it, , ]
       
     } else if (model_name == "Independent") {
       

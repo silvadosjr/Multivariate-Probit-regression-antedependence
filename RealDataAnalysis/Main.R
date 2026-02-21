@@ -127,9 +127,9 @@ Y<-sim_Toep$Y
 data_list=list(vT=vT,p=p,N=n,Y=Y,X=X_array,sigma_beta=10,sigma_rho=1,cor_type=3,n_obs=n_obs,t_index=t_index) 
 
 
-model_name<-'AD'
+model_name<-'Independent'
 
-params <- make_pars(model_name,log_lik = F)
+params <- make_pars(model_name,log_lik = T)
 nChains = 1
 burnInSteps = 1000
 thinSteps = 5
@@ -146,7 +146,7 @@ begin<-Sys.time()
 print(begin)
 
 
-samp1 <- stan(data = data_list, file =file.path('Programs', "FitMultProbit_Structured_Missing.stan"),init = ini,
+samp1 <- stan(data = data_list, file =file.path('Programs', "FitProbit_Ind_Missing_Diag.stan"),init = ini,
               chains = nChains, pars = params, iter = nIter,
               warmup = burnInSteps, thin = thinSteps,control = list(adapt_delta = 0.9,max_treedepth=15),
               save_dso = T,refresh=600)
@@ -184,7 +184,7 @@ rho_amos<-fit1$rho_vec
 
 C_amos<-fit1$C
 
-(C_est=apply(C_amos, c(2,3), mean))
+C_est=apply(C_amos, c(2,3), mean)
 
 
 beta_est<-apply(beta_amos,2,mean)
