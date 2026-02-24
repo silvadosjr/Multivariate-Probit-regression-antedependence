@@ -221,12 +221,9 @@ Prod.matrix<-function(vT,rho){
 }
 
 
-AD_matrix <- function(L, rho) {
-  # L = dimensão
+AD_matrix <- function(rho) {
   # rho = vetor de comprimento L-1
-  
-  if (length(rho) != L - 1)
-    stop("O vetor rho deve ter comprimento L - 1.")
+  L<-length(rho) + 1L
   
   # Cria matriz identidade
   R <- diag(1, L)
