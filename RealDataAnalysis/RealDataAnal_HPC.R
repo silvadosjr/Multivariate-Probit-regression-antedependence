@@ -16,6 +16,8 @@ source(here("Programs", "Aux_Functions.R"))
 pathFit <- here('RealDataAnalysis','Fit')
 dir.create(pathFit, recursive = TRUE, showWarnings = FALSE)
 
+pathFig<-here('Figures')
+
 # ===========================================================================
 # Data preparation: Six Cities data
 # ===========================================================================
@@ -300,6 +302,15 @@ panel_ar1 <- plot_Q3_discrepancy_panel(
 panel_ar1
 
 
+
+ggsave(
+  file.path(pathFig, "Heatmap_ar1_SixCities.eps"),
+  panel_ar1,
+  device = cairo_ps,
+  width  = 6,
+  height = 5,
+  units  = "in"
+)
 
 
 
