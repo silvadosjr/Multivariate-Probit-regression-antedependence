@@ -16,6 +16,7 @@ source(here("Programs", "Aux_Functions.R"))
 pathFit <- here('RealDataAnalysis','Fit')
 dir.create(pathFit, recursive = TRUE, showWarnings = FALSE)
 
+pathFig<-here('Figures')
 
 # Directory to store fitted models
 pathFit <- here('RealDataAnalysis','Madras','Fit')
@@ -274,10 +275,22 @@ p_beta <- ggplot(df_beta, aes(x = parameter, y = estimate)) +
   geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.15) +
   geom_point(size = 2) +
   coord_flip() +
-  labs(x = NULL, y = "Estimate", title = "Posterior estimates (mean) and 95% CrI: Betas") +
+  labs(x = NULL, y = "Estimate", title = '') +
   theme_minimal(base_size = 12)
 
 p_beta
+
+
+ggsave(
+  file.path(pathFig, "Betas_AD_Madras.eps"),
+  p_beta,
+  device = cairo_ps,
+  width  = 6,
+  height = 5,
+  units  = "in"
+)
+
+
 
 
 #-----------------------------#
@@ -294,10 +307,21 @@ p_rho <- ggplot(df_rho, aes(x = parameter, y = estimate)) +
   geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.15) +
   geom_point(size = 2) +
   coord_flip() +
-  labs(x = NULL, y = "Estimate", title = "Posterior estimates (mean) and 95% CrI: Rhos (AD)") +
+  labs(x = NULL, y = "Estimate", title = '') +
   theme_minimal(base_size = 12)
 
 p_rho
+
+
+ggsave(
+  file.path(pathFig, "Rhos_AD_Madras.eps"),
+  p_rho,
+  device = cairo_ps,
+  width  = 6,
+  height = 5,
+  units  = "in"
+)
+
 
 
 
@@ -404,13 +428,21 @@ p_Rmean_low <- ggplot(df_Rmean_low, aes(x = col, y = row, fill = value)) +
   labs(
     x = "Time",
     y = "Time",
-    title = "Estimated correlation matrix (posterior mean) — lower triangle"
+    title = ''
   ) +
   theme_minimal(base_size = 12)
 
 p_Rmean_low
 
 
+ggsave(
+  file.path(pathFig, "CorMatrix_AD_Madras.eps"),
+  p_Rmean_low,
+  device = cairo_ps,
+  width  = 6,
+  height = 5,
+  units  = "in"
+)
 
 
 

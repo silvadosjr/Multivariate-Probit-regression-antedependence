@@ -570,11 +570,14 @@ hpc_q3_adjusted <- function(
       
     } else if (model_name == "Unstructured") {
       
-      if (is.null(post$Lcorr)) stop("Posterior draw 'Lcorr' not found.")
-      L <- post$Lcorr[it, , ]
-      R <- L %*% t(L)
-      
-    #  R<- post$C[it, , ]
+      R <- if (!is.null(post$Lcorr)) {
+        L <- post$Lcorr[it, , ]
+        L %*% t(L)
+      } else if (!is.null(post$C)) {
+        post$C[it, , ]
+      } else {
+        stop("Neither 'Lcorr' nor 'C' found in posterior draws.")
+      }
       
     } else if (model_name == "Independent") {
       

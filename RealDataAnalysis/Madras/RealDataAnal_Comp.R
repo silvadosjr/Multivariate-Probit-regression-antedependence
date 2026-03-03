@@ -255,7 +255,7 @@ names(results) <- models
 # LOO comparison
 loo_list <- lapply(results, `[[`, "loo")
 loo_comp <- loo::loo_compare(loo_list)
-print(loo_comp)
+print(loo_comp,simplify = F)
 
 # WAIC comparison (less stable, but reported)
 waic_list <- lapply(results, `[[`, "waic")

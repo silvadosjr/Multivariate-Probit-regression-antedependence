@@ -16,6 +16,7 @@ source(here("Programs", "Aux_Functions.R"))
 pathFit <- here('RealDataAnalysis','Fit')
 dir.create(pathFit, recursive = TRUE, showWarnings = FALSE)
 
+pathFig<-here('Figures')
 
 # Directory to store fitted models
 pathFit <- here('RealDataAnalysis','Madras','Fit')
@@ -373,6 +374,14 @@ panel_AD <- plot_Q3_discrepancy_panel(
 panel_AD
 
 
+ggsave(
+  file.path(pathFig, "Heatmap_AD_Madras.eps"),
+  panel_AD,
+  device = cairo_ps,
+  width  = 15,
+  height = 14,
+  units  = "in"
+)
 
 
 
