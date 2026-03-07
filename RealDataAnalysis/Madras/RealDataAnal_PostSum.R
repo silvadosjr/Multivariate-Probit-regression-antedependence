@@ -220,7 +220,7 @@ rho_tbl  <- tibble::rownames_to_column(rho_sum,  var = "parameter") %>%
 post_table <- bind_rows(beta_tbl, rho_tbl) %>%
   select(block, parameter, mean, sd, median, q2.5, q97.5, pr_gt0)
 
-post_table
+post_table[,c(2,3,6,7)]
 
 
 # rho[1] corresponds to Corr(Z_0, Z_1) in the AD(1) lag-1 band
