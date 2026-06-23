@@ -6,11 +6,11 @@ Bayesian multivariate probit models for correlated binary longitudinal data, wit
 
 For subject \(i\) at occasion \(t\), the model introduces a latent Gaussian response
 
-\[
+$$
 Z_{it} = x_{it}^{\mathsf T}\beta + \varepsilon_{it},
 \qquad
 Y_{it} = \mathbb{1}(Z_{it} > 0),
-\]
+$$
 
 where the within-subject errors are jointly normal and their correlation matrix describes the dependence among repeated binary outcomes.
 
@@ -25,9 +25,9 @@ The implementations cover the following residual correlation structures:
 
 Under AD(1), correlations are built from local dependence parameters. For \(s<t\),
 
-\[
-\operatorname{Corr}(Z_{is},Z_{it}) = \prod_{r=s}^{t-1}\rho_r.
-\]
+$$
+\mbox{Corr}(Z_{is},Z_{it}) = \prod_{r=s}^{t-1}\rho_r.
+$$
 
 This parameterization is useful when dependence evolves across unequally related consecutive occasions rather than being governed by one stationary correlation coefficient.
 
@@ -205,7 +205,7 @@ The `*_HPC.R` filenames refer to **held-out predictive checks**, not to a requir
 
 If you use this code in academic work, please cite the associated manuscript:
 
-> dos Santos, J. R. S., Farias, R. B. A., & Santos-Neto, M. (2026). *Bayesian multivariate probit regression for longitudinal binary data via structured latent dependence models* [Manuscript in preparation for submission to the *Journal of Statistical Computation and Simulation*].
+> Santos, J. R. S., Farias, R. B. A., & Santos-Neto, M. (2026). *Bayesian multivariate probit regression for longitudinal binary data via structured latent dependence models* [Manuscript in preparation for submission to the *Journal of Statistical Computation and Simulation*].
 
 BibTeX:
 
