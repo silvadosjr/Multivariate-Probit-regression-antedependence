@@ -26,7 +26,7 @@ The implementations cover the following residual correlation structures:
 Under AD(1), correlations are built from local dependence parameters. For \(s<t\),
 
 $$
-\operatorname{Corr}(Z_{is},Z_{it}) = \prod_{r=s}^{t-1}\rho_r.
+\mbox{Corr}(Z_{is},Z_{it}) = \prod_{r=s}^{t-1}\rho_r.
 $$
 
 This parameterization is useful when dependence evolves across unequally related consecutive occasions rather than being governed by one stationary correlation coefficient.
