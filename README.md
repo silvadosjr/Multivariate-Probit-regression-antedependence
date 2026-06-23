@@ -222,6 +222,8 @@ Update this entry with the DOI and publication details after acceptance.
 
 ## License
 
-The source code in this repository is licensed under the [MIT License](LICENSE).
+Copyright © 2026 José Roberto Silva dos Santos.
+
+The source code in this repository is licensed under the [GNU General Public License v3.0](LICENSE) (`GPL-3.0-only`). Redistributions and modified versions of the code must remain under the same license and make the corresponding source code available.
 
 The datasets and manuscript-related materials may be subject to separate terms and are not covered by the software license unless explicitly stated otherwise.
