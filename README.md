@@ -222,4 +222,6 @@ Update this entry with the DOI and publication details after acceptance.
 
 ## License
 
-No license file is currently included. Unless a license is added, the source code remains under the copyright of its authors and reuse is not automatically granted.
+The source code in this repository is licensed under the [MIT License](LICENSE).
+
+The datasets and manuscript-related materials may be subject to separate terms and are not covered by the software license unless explicitly stated otherwise.
