@@ -6,11 +6,11 @@ Bayesian multivariate probit models for correlated binary longitudinal data, wit
 
 For subject \(i\) at occasion \(t\), the model introduces a latent Gaussian response
 
-\[
+$$
 Z_{it} = x_{it}^{\mathsf T}\beta + \varepsilon_{it},
 \qquad
 Y_{it} = \mathbb{1}(Z_{it} > 0),
-\]
+$$
 
 where the within-subject errors are jointly normal and their correlation matrix describes the dependence among repeated binary outcomes.
 
@@ -25,9 +25,9 @@ The implementations cover the following residual correlation structures:
 
 Under AD(1), correlations are built from local dependence parameters. For \(s<t\),
 
-\[
+$$
 \operatorname{Corr}(Z_{is},Z_{it}) = \prod_{r=s}^{t-1}\rho_r.
-\]
+$$
 
 This parameterization is useful when dependence evolves across unequally related consecutive occasions rather than being governed by one stationary correlation coefficient.
 
