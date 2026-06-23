@@ -1,6 +1,6 @@
 # Multivariate Probit Regression Using Antedependence Structures
 
-Bayesian multivariate probit models for correlated binary longitudinal data, with an emphasis on first-order antedependence structures. The repository contains the Stan models, simulation studies, real-data analyses, and figures associated with the project **“Multivariate Probit Regression Using Antedependence Structures.”**
+Bayesian multivariate probit models for correlated binary longitudinal data, with an emphasis on first-order antedependence structures. The repository contains the Stan models, simulation studies, real-data analyses, and figures associated with the manuscript **“Bayesian Multivariate Probit Regression for Longitudinal Binary Data via Structured Latent Dependence Models.”**
 
 ## Overview
 
@@ -205,9 +205,20 @@ The `*_HPC.R` filenames refer to **held-out predictive checks**, not to a requir
 
 If you use this code in academic work, please cite the associated manuscript:
 
-> *Multivariate Probit Regression Using Antedependence Structures.*
+> dos Santos, J. R. S., Farias, R. B. A., & Santos-Neto, M. (2026). *Bayesian multivariate probit regression for longitudinal binary data via structured latent dependence models* [Manuscript in preparation for submission to the *Journal of Statistical Computation and Simulation*].
 
-Complete the author, year, journal, and DOI information here when the manuscript becomes publicly available.
+BibTeX:
+
+```bibtex
+@unpublished{dosSantos2026BayesianMultivariateProbit,
+  author = {dos Santos, Jos\'{e} Roberto Silva and Farias, Rafael Br\'{a}z Azevedo and Santos-Neto, Manoel},
+  title  = {Bayesian Multivariate Probit Regression for Longitudinal Binary Data via Structured Latent Dependence Models},
+  year   = {2026},
+  note   = {Manuscript in preparation for submission to the Journal of Statistical Computation and Simulation}
+}
+```
+
+Update this entry with the DOI and publication details after acceptance.
 
 ## License
 
