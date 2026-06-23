@@ -205,7 +205,7 @@ The `*_HPC.R` filenames refer to **held-out predictive checks**, not to a requir
 
 If you use this code in academic work, please cite the associated manuscript:
 
-> dos Santos, J. R. S., Farias, R. B. A., & Santos-Neto, M. (2026). *Bayesian multivariate probit regression for longitudinal binary data via structured latent dependence models* [Manuscript in preparation for submission to the *Journal of Statistical Computation and Simulation*].
+> Santos, J. R. S., Farias, R. B. A., & Santos-Neto, M. (2026). *Bayesian multivariate probit regression for longitudinal binary data via structured latent dependence models* [Manuscript in preparation for submission to the *Journal of Statistical Computation and Simulation*].
 
 BibTeX:
 
